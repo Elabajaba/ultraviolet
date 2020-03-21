@@ -1,6 +1,7 @@
 //!
 //! Geometry helper functionality.
 use crate::{Vec3, Vec3i, Vec3u};
+use crate::util::EqualsEps;
 
 /// A plane which can be intersected by a ray.
 #[derive(Debug, Copy, Clone)]
@@ -392,6 +393,32 @@ impl Aabb {
     #[must_use]
     pub fn center(&self) -> Vec3 {
         self.min + (self.size() / 2.0)
+    }
+
+
+    /// Returns true if the [`Vec3`] is approximately inside the [`AABB`]
+    /// with respect to some `epsilon`.
+    pub fn approx_contains_eps(&self, p: &Vec3, epsilon: f32) -> bool {
+        (p.x - self.min.x) > -epsilon
+            && (p.x - self.max.x) < epsilon
+            && (p.y - self.min.y) > -epsilon
+            && (p.y - self.max.y) < epsilon
+            && (p.z - self.min.z) > -epsilon
+            && (p.z - self.max.z) < epsilon
+    }
+
+    /// Returns true if the `other` [`AABB`] is approximately inside this [`AABB`]
+    /// with respect to some `epsilon`.
+    pub fn approx_contains_aabb_eps(&self, other: &Aabb, epsilon: f32) -> bool {
+        self.approx_contains_eps(&other.min, epsilon)
+            && self.approx_contains_eps(&other.max, epsilon)
+    }
+
+    /// Returns true if the `other` [`AABB`] is approximately equal to this [`AABB`]
+    /// with respect to some `epsilon`.
+    pub fn relative_eq(&self, other: &Aabb) -> bool {
+        self.min.eq_eps(other.min) 
+            && self.max.eq_eps(other.max)
     }
 }
 
