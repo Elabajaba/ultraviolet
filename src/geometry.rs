@@ -2,6 +2,7 @@
 //! Geometry helper functionality.
 use crate::{Vec3, Vec3i, Vec3u};
 use crate::util::EqualsEps;
+use std::ops::Index;
 
 /// A plane which can be intersected by a ray.
 #[derive(Debug, Copy, Clone)]
