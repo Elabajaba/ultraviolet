@@ -3,6 +3,7 @@
 use crate::{Vec3, Vec3i, Vec3u};
 use crate::util::EqualsEps;
 use std::ops::Index;
+use std::{f32, i32, u32};
 
 /// A plane which can be intersected by a ray.
 #[derive(Debug, Copy, Clone)]
@@ -409,9 +410,19 @@ impl Aabb {
         self.min + (self.size() / 2.0)
     }
 
+    #[inline]
+    #[must_use]
+    pub fn empty() -> Aabb {
+        Aabb {
+            min: Vec3::new(f32::INFINITY, f32::INFINITY, f32::INFINITY),
+            max: Vec3::new(f32::NEG_INFINITY, f32::NEG_INFINITY, f32::NEG_INFINITY),
+        }
+    }
 
     /// Returns true if the [`Vec3`] is approximately inside the [`AABB`]
     /// with respect to some `epsilon`.
+    #[inline]
+    #[must_use]
     pub fn approx_contains_eps(&self, p: &Vec3, epsilon: f32) -> bool {
         (p.x - self.min.x) > -epsilon
             && (p.x - self.max.x) < epsilon
@@ -423,6 +434,8 @@ impl Aabb {
 
     /// Returns true if the `other` [`AABB`] is approximately inside this [`AABB`]
     /// with respect to some `epsilon`.
+    #[inline]
+    #[must_use]
     pub fn approx_contains_aabb_eps(&self, other: &Aabb, epsilon: f32) -> bool {
         self.approx_contains_eps(&other.min, epsilon)
             && self.approx_contains_eps(&other.max, epsilon)
@@ -430,6 +443,8 @@ impl Aabb {
 
     /// Returns true if the `other` [`AABB`] is approximately equal to this [`AABB`]
     /// with respect to some `epsilon`.
+    #[inline]
+    #[must_use]
     pub fn relative_eq(&self, other: &Aabb) -> bool {
         self.min.eq_eps(other.min) 
             && self.max.eq_eps(other.max)
