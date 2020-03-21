@@ -318,6 +318,19 @@ macro_rules! impl_aabb {
             }
         }
 
+        /// Makes Aabbs indexable. [0] is the minimum bound, all other indices are the maximum bound.
+        impl Index<usize> for $n {
+            type Output = $v3t;
+        
+            fn index(&self, index: usize) -> &$v3t {
+                if index == 0 {
+                    &self.min
+                } else {
+                    &self.max
+                }
+            }
+        }
+
         /// Linear iterator across a 3D coordinate space with the provided stride.
         /// This iterator is inclusive of minimum coordinates, and exclusive of maximum.
         pub struct $iter {
